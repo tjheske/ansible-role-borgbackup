@@ -97,3 +97,6 @@
 
 - include_tasks: 'cron.yml'
   when: borgmatic_cron
+
+- include_tasks: 'systemd.yml'
+  when: borgmatic_systemd

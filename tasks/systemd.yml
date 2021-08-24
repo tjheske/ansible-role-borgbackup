@@ -1,0 +1,17 @@
+- name: 'deploy borgmatic.service unit files'
+  template:
+    backup: yes
+    dest: '/etc/systemd/system/{{ item }}'
+    mode: '0644'
+    src: '{{ item }}.j2'
+  loop:
+    - 'borgmatic.timer'
+    - 'borgmatic.service'
+  notify:
+    - 'daemon-reload'
+
+- name: 'enable and start borgmatic.timer'
+  systemd:
+    enabled: yes
+    name: 'borgmatic.timer'
+    state: 'started'
