@@ -18,6 +18,7 @@ borgmatic_relocated_repo_access_is_ok: false
 borgmatic_hooks: []
 borg_one_file_system: true
 borg_exclude_from: []
+borg_compression: 'auto,zstd'
 borg_encryption_passcommand: false
 borg_lock_wait_time: 5
 borg_ssh_command: false
