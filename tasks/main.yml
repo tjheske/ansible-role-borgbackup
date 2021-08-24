@@ -95,47 +95,8 @@
     dest: "/etc/borgmatic/{{ borgmatic_config_name }}"
     mode: 0600
 
-- name: Add cron-job for borgmatic (large repo, create and check separate)
-  block:
-    - name: Add cron job for regular create and prune
-      cron:
-        name: "{{ borgmatic_cron_name }}"
-        hour: "{{ borgmatic_cron_hour }}"
-        minute: "{{ borgmatic_cron_minute }}"
-        user: "root"
-        cron_file: "{{ borgmatic_cron_name }}"
-        job: "borgmatic -c /etc/borgmatic/{{ borgmatic_config_name }} --create --prune"
-    - name: Add cron job for infrequent checks
-      cron:
-        name: "{{ borgmatic_cron_name }}-check"
-        day: "{{ borgmatic_cron_checks_day }}"
-        hour: "{{ borgmatic_cron_checks_hour }}"
-        minute: "{{ borgmatic_cron_checks_minute }}"
-        user: "root"
-        cron_file: "{{ borgmatic_cron_name }}"
-        job: "borgmatic -c /etc/borgmatic/{{ borgmatic_config_name }} --check"
-  when: borgmatic_large_repo
+- include_tasks: 'cron.yml'
+  when: borgmatic_cron
 
-- name: Add cron-job for borgmatic (normal-sized repo)
-  block:
-    - name: Add cron job for create, check and prune
-      cron:
-        name: "{{ borgmatic_cron_name }}"
-        hour: "{{ borgmatic_cron_hour }}"
-        minute: "{{ borgmatic_cron_minute }}"
-        user: "root"
-        cron_file: "{{ borgmatic_cron_name }}"
-        job: "borgmatic -c /etc/borgmatic/{{ borgmatic_config_name }}"
-    - name: Ensure separate check cron job is absent
-      cron:
-        name: "{{ borgmatic_cron_name }}-check"
-        state: absent
-  when: not borgmatic_large_repo
-
-- name: Set PATH for borgmatic cron job.
-  cron:
-    user: "root"
-    cron_file: "{{ borgmatic_cron_name }}"
-    name: PATH
-    env: yes
-    value: /usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+- include_tasks: 'systemd.yml'
+  when: borgmatic_systemd
