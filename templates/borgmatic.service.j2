@@ -1,0 +1,22 @@
+[Unit]
+Description=borgmatic backup
+Wants=network-online.target
+After=network-online.target
+{% if borgmatic_is_portable %}
+ConditionACPower=true
+{% endif %}
+
+[Service]
+Type=oneshot
+Nice=19
+CPUSchedulingPolicy=batch
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+IOWeight=100
+Restart=no
+LogRateLimitIntervalSec=0
+{% if borgmatic_large_repo %}
+ExecStart=systemd-inhibit --who="borgmatic" --why="Prevents interrupting scheduled backup" /usr/bin/borgmatic --syslog-verbosity 1 --create --prune
+{% else %}
+ExecStart=systemd-inhibit --who="borgmatic" --why="Prevents interrupting scheduled backup" /usr/bin/borgmatic --syslog-verbosity 1
+{% endif %}
