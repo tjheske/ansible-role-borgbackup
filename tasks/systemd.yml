@@ -33,7 +33,7 @@
 - name: 'enable and start borgmatic-check.timer'
   systemd:
     enabled: yes
-    name: 'borgmatic.timer'
+    name: 'borgmatic-check.timer'
     state: 'started'
   when:
     - 'borgmatic_large_repo'
