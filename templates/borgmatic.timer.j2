@@ -1,0 +1,9 @@
+[Unit]
+Description=Run borgmatic backup
+
+[Timer]
+OnCalendar=*-*-* {{ borgmatic_cron_hour }}:{{ borgmatic_cron_minute }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target
