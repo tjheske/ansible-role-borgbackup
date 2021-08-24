@@ -15,4 +15,4 @@ IOSchedulingPriority=7
 IOWeight=100
 Restart=no
 LogRateLimitIntervalSec=0
-ExecStart=systemd-inhibit --who="borgmatic" --why="Prevents interrupting scheduled backup check" /usr/bin/borgmatic --syslog-verbosity 1 --check
+ExecStart=systemd-inhibit --who="borgmatic" --why="Prevents interrupting scheduled backup check" /usr/local/bin/borgmatic --syslog-verbosity 1 --check
